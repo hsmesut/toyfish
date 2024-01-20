@@ -7,6 +7,8 @@ whitePawn = 'P'
 blackPawn = 'p'
 whiteKing = 'K'
 blackKing = 'k'
+whiteQueen = 'Q'
+blackQueen = 'q'
 blackNextTwoSquare = 20
 whiteNextTwoSquare = -1 * blackNextTwoSquare
 
@@ -62,29 +64,47 @@ class Chess:
 						if captured_piece in [blackKing, whiteKing]: return []
 
 						move_list.append({
-							'source': square, 'target_square': target_square,
+							'source': square, 'target': target_square,
 							'piece': piece, 'captured': captured_piece,
 						})
 
 						# Move the piece to square and replace it previous square
 						self.board[target_square] = piece
 						self.board[square] = emptySquare
-						print(''.join([' ' + cs.pieces[p] for p in ''.join(cs.board)]), cs.side); input()
+						#print(''.join([' ' + cs.pieces[p] for p in ''.join(cs.board)]), cs.side);
 
 						# Put it back
 						self.board[target_square] = captured_piece
 						self.board[square] = piece
-						print(''.join([' ' + cs.pieces[p] for p in ''.join(cs.board)]), cs.side); input()
+						#print(''.join([' ' + cs.pieces[p] for p in ''.join(cs.board)]), cs.side);
 
 						# Validating the captured piece after moving if we captured opposite
 						if self.colors[captured_piece] == self.side ^ 1: break
 						if piece in 'PpNnKk': break
 		return move_list
 
+	def make_move(self, move):
+		self.board[move['target']] = move['piece']
+		self.board[move['source']] = emptySquare
+		if move['piece'] == whitePawn and move['source'] in self.rank_7: self.board[move['target']] = whiteQueen
+		if move['piece'] == blackPawn and move['source'] in self.rank_2: self.board[move['target']] = blackQueen
+		self.print()
+		self.side ^=1
+
+
+	def take_back(self, move):
+		self.board[move['target']] = move['captured']
+		self.board[move['source']] = move['piece']
+		self.print()
+		self.side ^=1
+
+	def print(self):
+		print(''.join([' ' + cs.pieces[p] for p in ''.join(cs.board)]), cs.side); input()
 
 
 cs = Chess('settings.json')
 #print(''.join([' ' + cs.pieces[p] for p in ''.join(cs.board)]), cs.side)
 
 for move in cs.generate_moves():
-	print(move)
+	cs.make_move(move)
+	cs.take_back(move)
