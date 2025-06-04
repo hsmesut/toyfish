@@ -102,9 +102,10 @@ class Chess:
 		print(''.join([' ' + cs.pieces[p] for p in ''.join(cs.board)]), cs.side); input()
 
 
-cs = Chess('settings.json')
-#print(''.join([' ' + cs.pieces[p] for p in ''.join(cs.board)]), cs.side)
+if __name__ == "__main__":
+    cs = Chess('settings.json')
+    #print(''.join([' ' + cs.pieces[p] for p in ''.join(cs.board)]), cs.side)
 
-for move in cs.generate_moves():
-	cs.make_move(move)
-	cs.take_back(move)
+    for move in cs.generate_moves():
+        cs.make_move(move)
+        cs.take_back(move)
